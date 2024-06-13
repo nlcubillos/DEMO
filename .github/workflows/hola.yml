@@ -1,0 +1,30 @@
+name: Auto Commit on Master Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  auto_commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set Git Config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@users.noreply.github.com"
+
+      - name: Create new commit
+        run: |
+          echo "Auto-generated commit message" >> newfile.txt
+          git add newfile.txt
+          git commit -m "Auto-generated commit by GitHub Actions"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.LEON }}
+          branch: ${{ github.ref }}
